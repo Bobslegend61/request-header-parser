@@ -8,7 +8,14 @@ app.get("/", function(req, res){
 });
 
 app.get("/api/whoami", function(req, res){
-  res.json({check: req.connection.remoteAddress});
+  var ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  var operatingSystem = req.headers["user-agent"].substring((req.headers["user-agent"].indexOf("(") + 1), req.headers["user-agent"].indexOf(")"));
+  var language = req.headers["accept-language"].slice(0,req.headers["accept-language"].indexOf(","));
+  res.json({
+    ipaddress: ip,
+    software: operatingSystem,
+    language: language
+  });
 });
 
 app.listen(PORT, function(){
